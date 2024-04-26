@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: GcW12LisIBVgO
+      POSTGRES_DB: cabana
+    ports:
+      - 5432:5432
