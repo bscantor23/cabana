@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -21,8 +23,8 @@ export class AuthController {
     return this.authService.register(registerAuthDto);
   }
 
-  @Post()
-  login() {
-    return;
+  @Post('login')
+  login(@Body() loginAuthDto: LoginAuthDto) {
+    return this.authService.login(loginAuthDto);
   }
 }
