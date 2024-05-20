@@ -1,7 +1,7 @@
-export const COLOMBIA_ID = '09b1489a-821f-453f-8bec-b05f0d755318';
+export const COLOMBIA_ID = 1;
 
 export const paises = [
-  { id_pais: COLOMBIA_ID, nombre: 'Colombia' },
+  { nombre: 'Colombia' },
   { nombre: 'Afganistán' },
   { nombre: 'Albania' },
   { nombre: 'Argelia' },

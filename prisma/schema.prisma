@@ -14,133 +14,133 @@ datasource db {
 }
 
 model Rol {
-  id_rol      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre      String    @unique @db.VarChar(50)
-  descripcion String    @db.VarChar(100)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  usuarios    Usuario[]
+  id_rol              Int       @id @default(autoincrement())
+  nombre              String    @unique @db.VarChar(50)
+  descripcion         String    @db.VarChar(100)
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+  usuarios            Usuario[]
 
   @@map("rol")
 }
 
 model TipoDocumento {
-  id_tipo_documento String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre            String    @unique @db.VarChar(70)
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
-  usuarios          Usuario[]
+  id_tipo_documento   Int       @id @default(autoincrement())
+  nombre              String    @unique @db.VarChar(70)
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+  usuarios            Usuario[]
 
   @@map("tipo_documento")
 }
 
 model Pais {
-  id_pais    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre     String    @unique @db.VarChar(50)
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  usuarios   Usuario[]
+  id_pais             Int       @id @default(autoincrement())
+  nombre              String    @unique @db.VarChar(50)
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+  usuarios            Usuario[]
 
   @@map("pais")
 }
 
 model Usuario {
-  id_usuario            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_rol                String            @db.Uuid
-  id_tipo_documento     String            @db.Uuid
-  id_pais               String            @db.Uuid
-  numero_identificacion String            @db.VarChar(30)
-  correo_electronico    String            @unique @db.VarChar(100)
-  clave                 String            @db.VarChar(100)
-  primer_nombre         String            @db.VarChar(70)
-  segundo_nombre        String            @db.VarChar(70)
-  primer_apellido       String            @db.VarChar(70)
-  segundo_apellido      String            @db.VarChar(70)
-  direccion_residencia  String            @db.VarChar(200)
-  created_at            DateTime          @default(now())
-  updated_at            DateTime          @updatedAt
-  rol                   Rol               @relation(fields: [id_rol], references: [id_rol])
-  tipo_documento        TipoDocumento     @relation(fields: [id_tipo_documento], references: [id_tipo_documento])
-  pais                  Pais              @relation(fields: [id_pais], references: [id_pais])
-  usuario_telefonos     UsuarioTelefono[]
-  alojamientos          Alojamiento[]
-  reservas              Reserva[]
+  id_usuario           String            @id @db.VarChar(30)
+  id_rol               Int               @db.Integer
+  id_tipo_documento    Int               @db.Integer
+  id_pais              Int               @db.Integer
+  correo_electronico   String            @unique @db.VarChar(100)
+  clave                String            @db.VarChar(100)
+  primer_nombre        String            @db.VarChar(70)
+  segundo_nombre       String?           @db.VarChar(70)
+  primer_apellido      String            @db.VarChar(70)
+  segundo_apellido     String?           @db.VarChar(70)
+  direccion_residencia String            @db.VarChar(200)
+  fecha_creacion       DateTime          @default(now())
+  fecha_actualizacion  DateTime          @updatedAt
+  rol                  Rol               @relation(fields: [id_rol], references: [id_rol])
+  tipo_documento       TipoDocumento     @relation(fields: [id_tipo_documento], references: [id_tipo_documento])
+  pais                 Pais              @relation(fields: [id_pais], references: [id_pais])
+  telefonos            UsuarioTelefono[]
+  alojamientos         Alojamiento[]
+  reservas             Reserva[]
 
   @@map("usuario")
 }
 
 model UsuarioTelefono {
-  id_usuario String   @db.Uuid
-  telefono   String   @db.VarChar(30)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  usuario    Usuario  @relation(fields: [id_usuario], references: [id_usuario])
+  id_usuario          String   @db.VarChar(30)
+  telefono            String   @db.VarChar(30)
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime @updatedAt
+  usuario             Usuario  @relation(fields: [id_usuario], references: [id_usuario])
 
   @@id([id_usuario, telefono])
   @@map("usuario_telefono")
 }
 
 model Departamento {
-  id_departamento String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre          String   @db.VarChar(100)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-  Ciudad          Ciudad[]
+  id_departamento     Int      @id @default(autoincrement())
+  nombre              String   @db.VarChar(100)
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime @updatedAt
+  ciudades            Ciudad[]
 
   @@map("departamento")
 }
 
 model Ciudad {
-  id_ciudad       String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_departamento String       @db.Uuid
-  nombre          String       @db.VarChar(100)
-  created_at      DateTime     @default(now())
-  updated_at      DateTime     @updatedAt
-  departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
-  barrios         Barrio[]
+  id_ciudad           Int             @id @default(autoincrement())
+  id_departamento     Int             @db.Integer
+  nombre              String          @db.VarChar(100)
+  fecha_creacion      DateTime        @default(now())
+  fecha_actualizacion DateTime        @updatedAt
+  departamento        Departamento    @relation(fields: [id_departamento], references: [id_departamento])
+  centros_poblados    CentroPoblado[]
 
   @@map("ciudad")
 }
 
-model Barrio {
-  id_barrio    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_ciudad    String        @db.Uuid
-  nombre       String        @db.VarChar(100)
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
-  ciudad       Ciudad        @relation(fields: [id_ciudad], references: [id_ciudad])
-  alojamientos Alojamiento[]
+model CentroPoblado {
+  id_centro_poblado   Int           @id @default(autoincrement())
+  id_ciudad           Int           @db.Integer
+  nombre              String        @db.VarChar(100)
+  fecha_creacion      DateTime      @default(now())
+  fecha_actualizacion DateTime      @updatedAt
+  ciudad              Ciudad        @relation(fields: [id_ciudad], references: [id_ciudad])
+  alojamientos        Alojamiento[]
 
-  @@map("barrio")
+  @@map("centro_poblado")
 }
 
 model TipoAlojamiento {
-  id_tipo_alojamiento String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_tipo_alojamiento Int           @id @default(autoincrement())
   nombre              String        @unique @db.VarChar(100)
-  created_at          DateTime      @default(now())
-  updated_at          DateTime      @updatedAt
+  fecha_creacion      DateTime      @default(now())
+  fecha_actualizacion DateTime      @updatedAt
   alojamientos        Alojamiento[]
 
   @@map("tipo_alojamiento")
 }
 
 model Alojamiento {
-  id_alojamiento      String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_propietario      String                  @db.Uuid
-  id_tipo_alojamiento String                  @db.Uuid
-  id_barrio           String                  @db.Uuid
+  id_alojamiento      Int                     @id @default(autoincrement())
+  id_propietario      String                  @db.VarChar(30)
+  id_tipo_alojamiento Int                     @db.Integer
+  id_centro_poblado   Int                     @db.Integer
   descripcion         String                  @db.Text
   direccion_fisica    String                  @db.VarChar(200)
+  valor_hospedaje     Decimal                 @db.Decimal(10, 2)
   cupo_persona        Int                     @db.SmallInt
   numero_habitaciones Int                     @db.SmallInt
   numero_banos        Int                     @db.SmallInt
   tiene_calefaccion   Boolean                 @db.Boolean
   permite_mascotas    Boolean                 @db.Boolean
-  created_at          DateTime                @default(now())
-  updated_at          DateTime                @updatedAt
+  fecha_creacion      DateTime                @default(now())
+  fecha_actualizacion DateTime                @updatedAt
   propietario         Usuario                 @relation(fields: [id_propietario], references: [id_usuario])
   tipo_alojamiento    TipoAlojamiento         @relation(fields: [id_tipo_alojamiento], references: [id_tipo_alojamiento])
-  barrio              Barrio                  @relation(fields: [id_barrio], references: [id_barrio])
+  centro_poblado      CentroPoblado           @relation(fields: [id_centro_poblado], references: [id_centro_poblado])
   fotografias         FotografiaAlojamiento[]
   reservas            Reserva[]
 
@@ -148,99 +148,101 @@ model Alojamiento {
 }
 
 model FotografiaAlojamiento {
-  id_fotografia_alojamiento String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_alojamiento            String      @db.Uuid
-  descripcion               String      @db.VarChar(500)
+  id_fotografia_alojamiento Int         @id @default(autoincrement())
+  id_alojamiento            Int         @db.Integer
+  descripcion               String      @db.Text
   uri                       String      @db.VarChar(200)
-  created_at                DateTime    @default(now())
-  updated_at                DateTime    @updatedAt
+  fecha_creacion            DateTime    @default(now())
+  fecha_actualizacion       DateTime    @updatedAt
   alojamiento               Alojamiento @relation(fields: [id_alojamiento], references: [id_alojamiento])
 
   @@map("fotografia_alojamiento")
 }
 
 model Reserva {
-  id_reserva       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_alojamiento   String   @db.Uuid
-  id_arrendatario  String   @db.Uuid
-  numero_personas  Int      @db.SmallInt
-  incluye_mascotas Boolean  @db.Boolean
-  fecha_registro   DateTime
-  fecha_inicio     DateTime
-  fecha_fin        DateTime
-  valor_calculado  Decimal
-
-  created_at    DateTime           @default(now())
-  updated_at    DateTime           @updatedAt
-  alojamientos  Alojamiento        @relation(fields: [id_alojamiento], references: [id_alojamiento])
-  arrendatarios Usuario            @relation(fields: [id_arrendatario], references: [id_usuario])
-  pago_reservas PagoReserva[]
-  encuesta      EncuestaReserva?
-  temporadas    TemporadaReserva[]
+  id_reserva          Int              @id @default(autoincrement())
+  id_alojamiento      Int              @db.Integer
+  id_arrendatario     String           @db.VarChar(30)
+  numero_personas     Int              @db.SmallInt
+  incluye_mascotas    Boolean          @db.Boolean
+  fecha_inicio        DateTime         @db.Date
+  fecha_fin           DateTime         @db.Date
+  valor_hospedaje     Decimal?         @default(0) @db.Decimal(10, 2)
+  valor_cancelado     Decimal?         @default(0) @db.Decimal(10, 2)
+  fecha_creacion      DateTime         @default(now())
+  fecha_actualizacion DateTime         @updatedAt
+  alojamiento         Alojamiento      @relation(fields: [id_alojamiento], references: [id_alojamiento])
+  arrendatarios       Usuario          @relation(fields: [id_arrendatario], references: [id_usuario])
+  pagos               PagoReserva[]
+  encuesta            EncuestaReserva?
+  detalles            ReservaDetalle[]
 
   @@map("reserva")
 }
 
 model TipoPago {
-  id_tipo_pago String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre       String        @unique @db.VarChar(100)
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
-  pagos        PagoReserva[]
+  id_tipo_pago        Int           @id @default(autoincrement())
+  nombre              String        @unique @db.VarChar(100)
+  fecha_creacion      DateTime      @default(now())
+  fecha_actualizacion DateTime      @updatedAt
+  pagos               PagoReserva[]
 
   @@map("tipo_pago")
 }
 
 model PagoReserva {
-  id_pago_reserva String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_reserva      String   @db.Uuid
-  id_tipo_pago    String   @db.Uuid
-  fecha_historico DateTime
-  valor_cancelado Decimal
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-  reserva         Reserva  @relation(fields: [id_reserva], references: [id_reserva])
-  tipo_pago       TipoPago @relation(fields: [id_tipo_pago], references: [id_tipo_pago])
+  id_pago_reserva     Int      @id @default(autoincrement())
+  id_reserva          Int      @db.Integer
+  id_tipo_pago        Int      @db.Integer
+  fecha_historico     DateTime
+  valor_cancelado     Decimal  @db.Decimal(10, 2)
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime @updatedAt
+  reserva             Reserva  @relation(fields: [id_reserva], references: [id_reserva])
+  tipo_pago           TipoPago @relation(fields: [id_tipo_pago], references: [id_tipo_pago])
 
   @@map("pago_reserva")
 }
 
 model EncuestaReserva {
-  id_encuesta_reserva String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_reserva          String   @unique @db.Uuid
+  id_encuesta_reserva Int      @id @default(autoincrement())
+  id_reserva          Int      @unique
   calificacion        Int      @db.SmallInt
   comentario          String   @db.Text
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime @updatedAt
   reserva             Reserva  @relation(fields: [id_reserva], references: [id_reserva])
 
   @@map("encuesta_reserva")
 }
 
 model Temporada {
-  id_temporada String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  descripcion  String             @db.VarChar(100)
-  fecha_inicio DateTime           @db.Date
-  fecha_fin    DateTime           @db.Date
-  porcentaje   Decimal
-  created_at   DateTime           @default(now())
-  updated_at   DateTime           @updatedAt
-  temporadas   TemporadaReserva[]
+  id_temporada        Int              @id @default(autoincrement())
+  descripcion         String           @db.VarChar(100)
+  fecha_inicio        DateTime         @db.Date
+  fecha_fin           DateTime         @db.Date
+  porcentaje          Decimal          @db.Decimal(5, 2)
+  fecha_creacion      DateTime         @default(now())
+  fecha_actualizacion DateTime         @updatedAt
+  detalles            ReservaDetalle[]
 
   @@map("temporada")
 }
 
-model TemporadaReserva {
-  id_reserva   String @db.Uuid
-  id_temporada String @db.Uuid
+model ReservaDetalle {
+  id_reserva_detalle  Int        @id @default(autoincrement())
+  id_reserva          Int        @db.Integer
+  id_temporada        Int?       @db.Integer
+  fecha_inicio        DateTime   @db.Date
+  fecha_fin           DateTime   @db.Date
+  interes             Decimal    @db.Decimal(10, 2)
+  valor_unitario      Decimal    @db.Decimal(10, 2)
+  cantidad_dias       Int
+  valor_hospedaje     Decimal    @db.Decimal(10, 2)
+  fecha_creacion      DateTime   @default(now())
+  fecha_actualizacion DateTime   @updatedAt
+  reserva             Reserva    @relation(fields: [id_reserva], references: [id_reserva])
+  temporada           Temporada? @relation(fields: [id_temporada], references: [id_temporada])
 
-  valor_hospedaje Decimal
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-
-  reserva   Reserva   @relation(fields: [id_reserva], references: [id_reserva])
-  temporada Temporada @relation(fields: [id_temporada], references: [id_temporada])
-
-  @@id([id_reserva, id_temporada])
-  @@map("temporada_reserva")
+  @@map("reserva_detalle")
 }

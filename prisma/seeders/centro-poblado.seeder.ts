@@ -1,9 +1,12 @@
 import { Faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
-import { barrios } from '../constants/barrios';
+import { centrosPoblados } from '../constants/centros-poblados';
 import { BOGOTA_ID, MEDELLIN_ID } from '../constants/ciudades';
 
-export const barrioSeeder = async (prisma: PrismaClient, faker: Faker) => {
+export const centroPobladoSeeder = async (
+  prisma: PrismaClient,
+  faker: Faker,
+) => {
   let generateds = [];
 
   let ciudades = await prisma.ciudad.findMany({
@@ -21,14 +24,14 @@ export const barrioSeeder = async (prisma: PrismaClient, faker: Faker) => {
     });
 
     for (let i = 0; i < random; i++) {
-      barrios.push({
+      centrosPoblados.push({
         id_ciudad: ciudad.id_ciudad,
         nombre: faker.location.city(),
       });
     }
   });
 
-  await prisma.barrio.createMany({
-    data: [...generateds, ...barrios],
+  await prisma.centroPoblado.createMany({
+    data: [...generateds, ...centrosPoblados],
   });
 };

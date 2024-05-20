@@ -1,0 +1,16 @@
+export const tablasAutoincremental = [
+  'centro_poblado',
+  'ciudad',
+  'departamento',
+  'pais',
+  'rol',
+  'tipo_documento',
+  'tipo_alojamiento',
+  'tipo_pago',
+  'alojamiento',
+  'encuesta_reserva',
+  'fotografia_alojamiento',
+  'pago_reserva',
+  'reserva',
+  'temporada',
+];
