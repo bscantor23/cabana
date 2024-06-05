@@ -29,6 +29,9 @@ export const fotografiaAlojamientoSeeder = async (
     ),
   ]);
 
+  let casas = casasImagenes.data.photos;
+  let cabanas = cabanasImagenes.data.photos;
+
   alojamientos.forEach((alojamiento) => {
     let random = faker.number.int({
       min: 1,
@@ -37,10 +40,9 @@ export const fotografiaAlojamientoSeeder = async (
 
     for (let i = 0; i < random; i++) {
       let imagen: any = faker.helpers.arrayElement(
-        alojamiento.id_tipo_alojamiento == CABANA_ID
-          ? cabanasImagenes.data.photos
-          : casasImagenes.data.photos,
+        alojamiento.id_tipo_alojamiento == CABANA_ID ? cabanas : casas,
       );
+
       generateds.push({
         id_alojamiento: alojamiento.id_alojamiento,
         descripcion: faker.lorem.paragraph({ min: 1, max: 5 }),

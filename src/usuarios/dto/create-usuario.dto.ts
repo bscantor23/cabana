@@ -1,66 +1,70 @@
 import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsString,
-  IsUUID,
   MaxLength,
-  MinLength,
 } from 'class-validator';
 
-export class RegisterAuthDto {
+export class CreateUsuarioDto {
   @IsString()
-  @IsUUID()
   @IsNotEmpty()
-  id_rol: string;
+  @MaxLength(30)
+  id_usuario: string;
 
-  @IsString()
-  @IsUUID()
+  @IsNumber()
   @IsNotEmpty()
-  id_tipo_documento: string;
+  id_rol: number;
 
-  @IsString()
-  @IsUUID()
+  @IsNumber()
   @IsNotEmpty()
-  id_pais: string;
+  id_tipo_documento: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  id_pais: number;
 
   @IsString()
-  @MaxLength(50)
-  numero_identificacion: string;
-
-  @IsString()
+  @IsNotEmpty()
   @IsEmail()
-  @IsNotEmpty()
   @MaxLength(100)
   correo_electronico: string;
 
   @IsString()
-  @MinLength(5)
-  @MaxLength(20)
   @IsNotEmpty()
+  @MaxLength(30)
   clave: string;
 
   @IsString()
-  @MaxLength(70)
   @IsNotEmpty()
+  @MaxLength(50)
   primer_nombre: string;
 
   @IsString()
-  @MaxLength(70)
-  @IsNotEmpty()
+  @IsOptional()
+  @MaxLength(50)
   segundo_nombre: string;
 
   @IsString()
-  @MaxLength(70)
   @IsNotEmpty()
+  @MaxLength(50)
   primer_apellido: string;
 
   @IsString()
-  @MaxLength(70)
-  @IsNotEmpty()
+  @IsOptional()
+  @MaxLength(50)
   segundo_apellido: string;
 
   @IsString()
-  @MaxLength(200)
   @IsNotEmpty()
+  @MaxLength(200)
   direccion_residencia: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  @MaxLength(30, { each: true })
+  telefonos?: string[];
 }

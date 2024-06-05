@@ -1,6 +1,6 @@
 export const temporadas = [
   {
-    descripcion: 'Temporada Fin de Año 2024',
+    descripcion: 'Temporada Fin de Año 2023',
     fecha_inicio: new Date('2023-12-15'),
     fecha_fin: new Date('2024-01-15'),
     porcentaje: 30,
@@ -123,6 +123,12 @@ export const temporadas = [
     descripcion: 'Navidad 2024',
     fecha_inicio: new Date('2024-12-25'),
     fecha_fin: new Date('2024-12-25'),
+    porcentaje: 30,
+  },
+  {
+    descripcion: 'Temporada Fin de Año 2024',
+    fecha_inicio: new Date('2024-12-15'),
+    fecha_fin: new Date('2025-01-15'),
     porcentaje: 30,
   },
 ];

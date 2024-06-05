@@ -14,8 +14,7 @@ export class LoginAuthDto {
   correo_electronico: string;
 
   @IsString()
-  @MinLength(5)
-  @MaxLength(20)
+  @MaxLength(100)
   @IsNotEmpty()
   clave: string;
 }

@@ -26,7 +26,8 @@ model Rol {
 
 model TipoDocumento {
   id_tipo_documento   Int       @id @default(autoincrement())
-  nombre              String    @unique @db.VarChar(70)
+  codigo              String    @unique @db.VarChar(10)
+  nombre              String    @unique @db.VarChar(50)
   fecha_creacion      DateTime  @default(now())
   fecha_actualizacion DateTime  @updatedAt
   usuarios            Usuario[]
@@ -51,16 +52,16 @@ model Usuario {
   id_pais              Int               @db.Integer
   correo_electronico   String            @unique @db.VarChar(100)
   clave                String            @db.VarChar(100)
-  primer_nombre        String            @db.VarChar(70)
-  segundo_nombre       String?           @db.VarChar(70)
-  primer_apellido      String            @db.VarChar(70)
-  segundo_apellido     String?           @db.VarChar(70)
+  primer_nombre        String            @db.VarChar(50)
+  segundo_nombre       String?           @db.VarChar(50)
+  primer_apellido      String            @db.VarChar(50)
+  segundo_apellido     String?           @db.VarChar(50)
   direccion_residencia String            @db.VarChar(200)
   fecha_creacion       DateTime          @default(now())
   fecha_actualizacion  DateTime          @updatedAt
-  rol                  Rol               @relation(fields: [id_rol], references: [id_rol])
-  tipo_documento       TipoDocumento     @relation(fields: [id_tipo_documento], references: [id_tipo_documento])
-  pais                 Pais              @relation(fields: [id_pais], references: [id_pais])
+  rol                  Rol?              @relation(fields: [id_rol], references: [id_rol])
+  tipo_documento       TipoDocumento?    @relation(fields: [id_tipo_documento], references: [id_tipo_documento])
+  pais                 Pais?             @relation(fields: [id_pais], references: [id_pais])
   telefonos            UsuarioTelefono[]
   alojamientos         Alojamiento[]
   reservas             Reserva[]
@@ -128,6 +129,7 @@ model Alojamiento {
   id_propietario      String                  @db.VarChar(30)
   id_tipo_alojamiento Int                     @db.Integer
   id_centro_poblado   Int                     @db.Integer
+  titulo              String                  @db.VarChar(100)
   descripcion         String                  @db.Text
   direccion_fisica    String                  @db.VarChar(200)
   valor_hospedaje     Decimal                 @db.Decimal(10, 2)
@@ -138,6 +140,7 @@ model Alojamiento {
   permite_mascotas    Boolean                 @db.Boolean
   fecha_creacion      DateTime                @default(now())
   fecha_actualizacion DateTime                @updatedAt
+  activo              Boolean                 @default(true)
   propietario         Usuario                 @relation(fields: [id_propietario], references: [id_usuario])
   tipo_alojamiento    TipoAlojamiento         @relation(fields: [id_tipo_alojamiento], references: [id_tipo_alojamiento])
   centro_poblado      CentroPoblado           @relation(fields: [id_centro_poblado], references: [id_centro_poblado])
@@ -172,7 +175,7 @@ model Reserva {
   fecha_creacion      DateTime         @default(now())
   fecha_actualizacion DateTime         @updatedAt
   alojamiento         Alojamiento      @relation(fields: [id_alojamiento], references: [id_alojamiento])
-  arrendatarios       Usuario          @relation(fields: [id_arrendatario], references: [id_usuario])
+  arrendatario        Usuario          @relation(fields: [id_arrendatario], references: [id_usuario])
   pagos               PagoReserva[]
   encuesta            EncuestaReserva?
   detalles            ReservaDetalle[]

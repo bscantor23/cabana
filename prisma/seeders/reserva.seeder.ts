@@ -1,6 +1,6 @@
 import { Faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
-import { ARRENDATARIO_ID } from '../constants/roles';
+import { USUARIO_ID } from '../constants/roles';
 import * as dayjs from 'dayjs';
 
 export const reservaSeeder = async (prisma: PrismaClient, faker: Faker) => {
@@ -10,7 +10,7 @@ export const reservaSeeder = async (prisma: PrismaClient, faker: Faker) => {
     prisma.alojamiento.findMany(),
     prisma.usuario.findMany({
       where: {
-        id_rol: ARRENDATARIO_ID,
+        id_rol: USUARIO_ID,
       },
     }),
   ]);

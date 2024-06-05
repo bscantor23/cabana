@@ -83,7 +83,10 @@ export const reservaDetalleSeeder = async (
       }
 
       detail.valor_hospedaje = Number(
-        (detail.valor_hospedaje + detail.valor_unitario).toFixed(2),
+        (
+          detail.valor_hospedaje +
+          detail.valor_unitario * reserva.numero_personas
+        ).toFixed(2),
       );
 
       detail.cantidad_dias += 1;

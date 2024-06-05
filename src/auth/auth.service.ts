@@ -1,10 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { RegisterAuthDto } from './dto/register-auth.dto';
 import { PrismaService } from 'src/prisma.service';
-import { hash, compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { roles } from 'prisma/constants/roles';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,35 +12,81 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerAuthDto: RegisterAuthDto) {
-    const { clave } = registerAuthDto;
-    const plainToHash = await hash(clave, 10);
-
-    registerAuthDto.clave = plainToHash;
-
-    return this.prisma.usuario.create({ data: registerAuthDto });
-  }
-
   async login(loginAuthDto: LoginAuthDto) {
+    const { clave, correo_electronico } = loginAuthDto;
+
     const findUser = await this.prisma.usuario.findFirst({
       where: {
-        correo_electronico: loginAuthDto.correo_electronico,
+        correo_electronico,
+      },
+      include: {
+        telefonos: true,
       },
     });
 
-    if (!findUser) throw new HttpException('USER_NOT_FOUND', 404);
+    if (!findUser) throw new HttpException('UsuarioNotFound', 404);
 
-    const checkPassword = await compare(loginAuthDto.clave, findUser.clave);
+    const checkPassword = await compare(clave, findUser.clave);
 
-    if (!checkPassword) throw new HttpException('INVALID_PASSWORD', 403);
+    if (!checkPassword) throw new HttpException('InvalidPassword', 403);
 
-    const token = await this.jwtService.sign({
+    const accessToken = await this.jwtService.sign({
       sub: findUser.id_usuario,
       role: findUser.id_rol,
     });
 
-    const data = { user: findUser, token };
+    const refreshToken = await this.jwtService.sign(
+      {
+        sub: findUser.id_usuario,
+        role: findUser.id_rol,
+      },
+      { secret: process.env.JWT_REFRESH_TOKEN_SECRET, expiresIn: '1d' },
+    );
+
+    const data = { user: findUser, refreshToken, accessToken };
 
     return data;
+  }
+
+  async changePassword(
+    id_usuario: string,
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    const { clave_anterior, clave_nueva } = changePasswordDto;
+
+    const findUser = await this.prisma.usuario.findUnique({
+      where: {
+        id_usuario,
+      },
+    });
+
+    if (!findUser) {
+      throw new HttpException('UsuarioNotFound', 404);
+    }
+
+    const checkPassword = await compare(clave_anterior, findUser.clave);
+    if (!checkPassword) {
+      throw new HttpException('InvalidPassword', 403);
+    }
+
+    const plainToHash = await hash(clave_nueva, 10);
+
+    await this.prisma.usuario.update({
+      where: {
+        id_usuario,
+      },
+      data: {
+        clave: plainToHash,
+      },
+    });
+  }
+
+  async refreshToken(user: { sub: string; role: number }) {
+    return {
+      accessToken: this.jwtService.sign({
+        sub: user.sub,
+        role: user.role,
+      }),
+    };
   }
 }

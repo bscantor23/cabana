@@ -1,6 +1,6 @@
 import { Faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
-import { PROPIETARIO_ID } from '../constants/roles';
+import { USUARIO_ID } from '../constants/roles';
 
 const QUANTITY = 500;
 
@@ -10,7 +10,7 @@ export const alojamientoSeeder = async (prisma: PrismaClient, faker: Faker) => {
   let [propietarios, tiposAlojamientos, centrosPoblados] = await Promise.all([
     prisma.usuario.findMany({
       where: {
-        id_rol: PROPIETARIO_ID,
+        id_rol: USUARIO_ID,
       },
     }),
     prisma.tipoAlojamiento.findMany(),
@@ -24,6 +24,7 @@ export const alojamientoSeeder = async (prisma: PrismaClient, faker: Faker) => {
         faker.helpers.arrayElement(tiposAlojamientos).id_tipo_alojamiento,
       id_centro_poblado:
         faker.helpers.arrayElement(centrosPoblados).id_centro_poblado,
+      titulo: faker.lorem.sentence(),
       descripcion: faker.lorem.paragraph(),
       direccion_fisica: faker.location.streetAddress(),
       valor_hospedaje: faker.number.float({

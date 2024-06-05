@@ -36,7 +36,6 @@ export const usuarioSeeder = async (prisma: PrismaClient, faker: Faker) => {
   });
 
   for (let i = 0; i < QUANTITY; i++) {
-    let password = await hash(faker.internet.password(), 10);
     generateds.push({
       id_usuario: faker.helpers.replaceSymbols('################'),
       id_rol: faker.helpers.arrayElement(roles).id_rol,
@@ -44,7 +43,7 @@ export const usuarioSeeder = async (prisma: PrismaClient, faker: Faker) => {
         faker.helpers.arrayElement(tiposDocumento).id_tipo_documento,
       id_pais: COLOMBIA_ID,
       correo_electronico: faker.internet.email(),
-      clave: password,
+      clave: freePassword,
       primer_nombre: faker.person.firstName(),
       segundo_nombre: faker.person.firstName(),
       primer_apellido: faker.person.middleName(),
